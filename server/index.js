@@ -18,21 +18,20 @@ app.use((req, res, next) => {
 //routes
 app.use("/api/reminder", reminderRoutes);
 
-// connecting to DB
+// connecting to DB and starting the server
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
+    // starting the server
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
     console.log("Connected to the database");
   })
   .catch((error) => {
     console.error("Error connecting to the database:", error);
   });
-
-// starting the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
