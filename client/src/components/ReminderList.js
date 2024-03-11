@@ -96,6 +96,14 @@ function ReminderList() {
     (a, b) => new Date(a.date) - new Date(b.date)
   );
 
+  const getColorClass = (index) => {
+    if (index <= 2) {
+      return "bg-[#891522]";
+    } else {
+      return "bg-green-600";
+    }
+  };
+
   return (
     <>
       <div className="px-[20%] ">
@@ -104,46 +112,63 @@ function ReminderList() {
             {successMessage}
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4  h-[px]  ">
-          {sortedData.map((reminder) => (
-            <div
-              key={reminder._id}
-              className="bg-[#D9D9D9] rounded-[10px] overflow-hidden flex flex-col mb-[16]"
-            >
-              <div className="py-4 px-6 flex flex-col flex-grow">
-                <div>
-                  <h3 className="text-[15px] font-bold mb-2 text-[#4C4C4C]">
-                    {reminder.title}
-                  </h3>
-                  <p className="text-[13px] font-normal mb-2 text-[#4C4C4C]">
-                    {reminder.description}
-                  </p>
-                </div>
-                <div className="mt-auto flex justify-between">
-                  <p className="text-[12px] font-bold text-[#4C4C4C]">
-                    {new Date(reminder.date).toLocaleDateString("en-GB")}
-                  </p>
-                  <MdMoreHoriz
-                    onClick={() => handleMoreIconClick(reminder._id)}
-                    className={selectedItemId === reminder._id ? "hidden" : ""}
-                  />
-                  {selectedItemId === reminder._id && (
-                    <div className=" w-[45px] flex flex-row items-center justify-between">
-                      <CiEdit
-                        className="text-[1.3em]"
-                        onClick={() => editReminder(reminder)}
-                      />
-                      <GoTrash
-                        className="text-[0.9em]"
-                        onClick={() => deleteReminder(reminder._id)}
-                      />
+
+        {data.length === 0 && !loading && (
+          <h3 className="flex justify-center font-bold">
+            😎 Get started by adding reminders.
+          </h3>
+        )}
+        {data.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4  h-[px]  ">
+            {sortedData.map((reminder, index) => (
+              <div
+                key={reminder._id}
+                className="bg-[#D9D9D9] rounded-[10px] overflow-hidden flex flex-col mb-[16]"
+              >
+                <div className="py-4 px-6 flex flex-col flex-grow">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-[15px] font-bold  text-[#4C4C4C]">
+                        {reminder.title}
+                      </h3>
+                      <div
+                        className={`${getColorClass(
+                          index
+                        )} w-[10px] h-[10px] rounded-[50%]`}
+                      ></div>
                     </div>
-                  )}
+                    <p className="text-[13px] font-normal mb-2 text-[#4C4C4C]">
+                      {reminder.description}
+                    </p>
+                  </div>
+                  <div className="mt-auto flex justify-between">
+                    <p className="text-[12px] font-bold text-[#4C4C4C]">
+                      {new Date(reminder.date).toLocaleDateString("en-GB")}
+                    </p>
+                    <MdMoreHoriz
+                      onClick={() => handleMoreIconClick(reminder._id)}
+                      className={
+                        selectedItemId === reminder._id ? "hidden" : ""
+                      }
+                    />
+                    {selectedItemId === reminder._id && (
+                      <div className=" w-[45px] flex flex-row items-center justify-between">
+                        <CiEdit
+                          className="text-[1.3em]"
+                          onClick={() => editReminder(reminder)}
+                        />
+                        <GoTrash
+                          className="text-[0.9em]"
+                          onClick={() => deleteReminder(reminder._id)}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
         <div className="fixed bottom-[20px] right-[300px]">
           {/* Render the AddReminder or EditReminder component based on the editingReminder state */}
           {editingReminder ? (
