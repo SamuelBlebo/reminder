@@ -9,7 +9,6 @@ import { CiEdit } from "react-icons/ci";
 
 function ReminderList() {
   const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState(null);
   const [error, setError] = useState(null);
@@ -20,7 +19,6 @@ function ReminderList() {
     try {
       const response = await axios.get("http://localhost:4000/api/reminder/");
       setData(response.data);
-      setOriginalData(response.data);
     } catch (error) {
       setError(error);
     } finally {
