@@ -1,0 +1,164 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import AddReminder from "../components/AddReminder";
+import EditReminder from "../components/EditReminder";
+
+import { MdMoreHoriz } from "react-icons/md";
+import { GoTrash } from "react-icons/go";
+import { CiEdit } from "react-icons/ci";
+
+function ReminderList() {
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [error, setError] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [editingReminder, setEditingReminder] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/reminder/");
+      setData(response.data);
+      setOriginalData(response.data);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  //Add New Reminder
+  const handleFormSubmit = async () => {
+    setLoading(true);
+
+    try {
+      await fetchData();
+      setSuccessMessage("Added successfully!");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 3000);
+  };
+  if (loading) {
+    return <p className="flex justify-center ">Loading...</p>;
+  }
+
+  if (error) {
+    return <p className="flex justify-center ">{error.message}</p>;
+  }
+
+  //Delete Reminder
+  const deleteReminder = async (id) => {
+    try {
+      await fetch(`http://localhost:4000/api/reminder/${id}`, {
+        method: "DELETE",
+      });
+
+      setLoading(true);
+
+      try {
+        await fetchData();
+        setSuccessMessage("Deleted successfully!");
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  const handleMoreIconClick = (id) => {
+    setSelectedItemId(selectedItemId === id ? null : id);
+  };
+
+  // Edit Reminder
+  const editReminder = (reminder) => {
+    setEditingReminder(reminder);
+  };
+
+  const sortedData = [...data].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+
+  return (
+    <>
+      <div className="px-[20%] ">
+        {successMessage && (
+          <div className="bg-green-500 w-[20em]  text-white py-1 px-4 mt-2 rounded-md mb-[2em] mx-auto ">
+            {successMessage}
+          </div>
+        )}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4  h-[px]  ">
+          {sortedData.map((reminder) => (
+            <div
+              key={reminder._id}
+              className="bg-[#D9D9D9] rounded-[10px] overflow-hidden flex flex-col mb-[16]"
+            >
+              <div className="py-4 px-6 flex flex-col flex-grow">
+                <div>
+                  <h3 className="text-[15px] font-bold mb-2 text-[#4C4C4C]">
+                    {reminder.title}
+                  </h3>
+                  <p className="text-[13px] font-normal mb-2 text-[#4C4C4C]">
+                    {reminder.description}
+                  </p>
+                </div>
+                <div className="mt-auto flex justify-between">
+                  <p className="text-[12px] font-bold text-[#4C4C4C]">
+                    {new Date(reminder.date).toLocaleDateString("en-GB")}
+                  </p>
+                  <MdMoreHoriz
+                    onClick={() => handleMoreIconClick(reminder._id)}
+                    className={selectedItemId === reminder._id ? "hidden" : ""}
+                  />
+                  {selectedItemId === reminder._id && (
+                    <div className=" w-[45px] flex flex-row items-center justify-between">
+                      <CiEdit
+                        className="text-[1.3em]"
+                        onClick={() => editReminder(reminder)}
+                      />
+                      <GoTrash
+                        className="text-[0.9em]"
+                        onClick={() => deleteReminder(reminder._id)}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="fixed bottom-[20px] right-[300px]">
+          {/* Render the AddReminder or EditReminder component based on the editingReminder state */}
+          {editingReminder ? (
+            <EditReminder
+              reminder={editingReminder}
+              onCancel={() => setEditingReminder(null)}
+              onSave={fetchData}
+            />
+          ) : (
+            <AddReminder onFormSubmit={handleFormSubmit} />
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default ReminderList;

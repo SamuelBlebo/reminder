@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 });
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://ai-hub-client.vercel.app"],
+  origin: ["http://localhost:3000"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, //
 };
