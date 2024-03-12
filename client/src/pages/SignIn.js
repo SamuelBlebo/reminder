@@ -131,6 +131,18 @@ function SignIn() {
                 </div>
               </div>
             </form>
+
+            <div className="mt-10">
+              <p>
+                Don't have an account?{" "}
+                <a
+                  href="/signup"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                >
+                  Sign up
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
