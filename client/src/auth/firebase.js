@@ -2,12 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAEDO-NsqdSkkzQ7Kn43iOU0YVldvG78k4",
-  authDomain: "ai-hub-83c63.firebaseapp.com",
-  projectId: "ai-hub-83c63",
-  storageBucket: "ai-hub-83c63.appspot.com",
-  messagingSenderId: "718727500173",
-  appId: "1:718727500173:web:c400eb6820874d02efedc4",
+  apiKey: "AIzaSyCl4TOMG_Wm2mJNptlONAfwbLcrOAE3sRw",
+  authDomain: "reminder-3c1e8.firebaseapp.com",
+  projectId: "reminder-3c1e8",
+  storageBucket: "reminder-3c1e8.appspot.com",
+  messagingSenderId: "873607580475",
+  appId: "1:873607580475:web:9cdd1da9f67d4cfc4b451e",
+  measurementId: "G-XNJ84RNM0W",
 };
 
 const app = initializeApp(firebaseConfig);

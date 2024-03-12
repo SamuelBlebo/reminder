@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddReminder from "../components/AddReminder";
 import EditReminder from "../components/EditReminder";
+import { useAuth } from "../auth/AuthContext";
 
 import { MdMoreHoriz } from "react-icons/md";
 import { GoTrash } from "react-icons/go";
@@ -14,6 +15,7 @@ function ReminderList() {
   const [error, setError] = useState(null);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [editingReminder, setEditingReminder] = useState(null);
+  const { currentUser } = useAuth();
 
   const fetchData = async () => {
     try {
@@ -111,62 +113,82 @@ function ReminderList() {
           </div>
         )}
 
-        {data.length === 0 && !loading && (
-          <h3 className="flex justify-center font-bold">
-            😎 Get started by adding reminders.
-          </h3>
-        )}
-        {data.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4  h-[px]  ">
-            {sortedData.map((reminder, index) => (
-              <div
-                key={reminder._id}
-                className="bg-[#D9D9D9] rounded-[10px] overflow-hidden flex flex-col mb-[16]"
-              >
-                <div className="py-4 px-6 flex flex-col flex-grow">
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="text-[15px] font-bold  text-[#4C4C4C]">
-                        {reminder.title}
-                      </h3>
-                      <div
-                        className={`${getColorClass(
-                          index
-                        )} w-[10px] h-[10px] rounded-[50%]`}
-                      ></div>
-                    </div>
-                    <p className="text-[13px] font-normal mb-2 text-[#4C4C4C]">
-                      {reminder.description}
-                    </p>
-                  </div>
-                  <div className="mt-auto flex justify-between">
-                    <p className="text-[12px] font-bold text-[#4C4C4C]">
-                      {new Date(reminder.date).toLocaleDateString("en-GB")}
-                    </p>
-                    <MdMoreHoriz
-                      onClick={() => handleMoreIconClick(reminder._id)}
-                      className={
-                        selectedItemId === reminder._id ? "hidden" : ""
-                      }
-                    />
-                    {selectedItemId === reminder._id && (
-                      <div className=" w-[45px] flex flex-row items-center justify-between">
-                        <CiEdit
-                          className="text-[1.3em]"
-                          onClick={() => editReminder(reminder)}
-                        />
-                        <GoTrash
-                          className="text-[0.9em]"
-                          onClick={() => deleteReminder(reminder._id)}
-                        />
+        {currentUser ? (
+          <div>
+            {" "}
+            {data.length === 0 && !loading && (
+              <h3 className="flex justify-center font-bold">
+                😎 Get started by adding reminders.
+              </h3>
+            )}
+            {data.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4  h-[px]  ">
+                {sortedData.map((reminder, index) => (
+                  <div
+                    key={reminder._id}
+                    className="bg-[#D9D9D9] rounded-[10px] overflow-hidden flex flex-col mb-[16]"
+                  >
+                    <div className="py-4 px-6 flex flex-col flex-grow">
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="text-[15px] font-bold  text-[#4C4C4C]">
+                            {reminder.title}
+                          </h3>
+                          <div
+                            className={`${getColorClass(
+                              index
+                            )} w-[10px] h-[10px] rounded-[50%]`}
+                          ></div>
+                        </div>
+                        <p className="text-[13px] font-normal mb-2 text-[#4C4C4C]">
+                          {reminder.description}
+                        </p>
                       </div>
-                    )}
+                      <div className="mt-auto flex justify-between">
+                        <p className="text-[12px] font-bold text-[#4C4C4C]">
+                          {new Date(reminder.date).toLocaleDateString("en-GB")}
+                        </p>
+                        <MdMoreHoriz
+                          onClick={() => handleMoreIconClick(reminder._id)}
+                          className={
+                            selectedItemId === reminder._id ? "hidden" : ""
+                          }
+                        />
+                        {selectedItemId === reminder._id && (
+                          <div className=" w-[45px] flex flex-row items-center justify-between">
+                            <CiEdit
+                              className="text-[1.3em]"
+                              onClick={() => editReminder(reminder)}
+                            />
+                            <GoTrash
+                              className="text-[0.9em]"
+                              onClick={() => deleteReminder(reminder._id)}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            )}
+          </div>
+        ) : (
+          <div>
+            <h3 className="flex justify-center font-bold">
+              🔒{" "}
+              <a
+                href="/signin "
+                className="font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                Login
+              </a>
+              &nbsp;
+              <span> </span> to get started
+            </h3>
           </div>
         )}
+
         <div className="fixed bottom-[20px] right-[300px]">
           {/* Render the AddReminder or EditReminder component based on the editingReminder state */}
           {editingReminder ? (

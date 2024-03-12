@@ -1,14 +1,17 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext"; // Import your useAuth hook
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 export const ProtectedRoute = ({ element }) => {
   const user = useAuth();
+  const navigate = useNavigate();
 
-  if (!user) {
-    // Redirect to the login page
-    return <Navigate to="/signin" />;
-  }
+  useEffect(() => {
+    if (!user) {
+      // Redirect to the login page
+      navigate("/signin");
+    }
+  }, [user, navigate]);
 
-  return element;
+  return user ? element : null;
 };
