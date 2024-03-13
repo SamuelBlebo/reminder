@@ -3,10 +3,13 @@ import axios from "axios";
 import AddReminder from "../components/AddReminder";
 import EditReminder from "../components/EditReminder";
 import { useAuth } from "../auth/AuthContext";
+import { Link } from "react-router-dom";
 
 import { MdMoreHoriz } from "react-icons/md";
 import { GoTrash } from "react-icons/go";
 import { CiEdit } from "react-icons/ci";
+
+import SignIn from "../pages/SignIn";
 
 function ReminderList() {
   const [data, setData] = useState([]);
@@ -106,7 +109,7 @@ function ReminderList() {
 
   return (
     <>
-      <div className="px-[20%] ">
+      <div>
         {successMessage && (
           <div className="bg-green-500 w-[20em]  text-white py-1 px-4 mt-2 rounded-md mb-[2em] mx-auto ">
             {successMessage}
@@ -114,7 +117,7 @@ function ReminderList() {
         )}
 
         {currentUser ? (
-          <div>
+          <div className=" px-[20%]">
             {" "}
             {data.length === 0 && !loading && (
               <h3 className="flex justify-center font-bold">
@@ -176,16 +179,19 @@ function ReminderList() {
         ) : (
           <div>
             <h3 className="flex justify-center font-bold">
-              🔒{" "}
-              <a
-                href="/signin "
+              🔒
+              <Link
+                to="/login "
                 className="font-semibold text-indigo-600 hover:text-indigo-500"
               >
                 Login
-              </a>
+              </Link>
               &nbsp;
               <span> </span> to get started
             </h3>
+            <div>
+              <SignIn />
+            </div>
           </div>
         )}
 

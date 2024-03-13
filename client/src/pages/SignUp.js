@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../auth/firebase";
 import { useNavigate } from "react-router-dom";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -181,12 +182,12 @@ function SignUp() {
             <div className="mt-10">
               <p>
                 Have an account already?
-                <a
-                  href="/signin"
+                <Link
+                  to="/login"
                   className="font-semibold text-indigo-600 hover:text-indigo-500"
                 >
                   Log in
-                </a>
+                </Link>
               </p>
             </div>
           </div>
