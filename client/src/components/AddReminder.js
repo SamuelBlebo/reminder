@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../auth/AuthContext";
 
 import { LuBellPlus } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
@@ -10,12 +11,22 @@ export default function AddReminder({ onFormSubmit }) {
   const [date, setDate] = useState("");
   const [error, setError] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const currentUser = useAuth();
+
+  if (currentUser) {
+    const userId = currentUser.uid;
+    console.log("Current user ID:", userId);
+  } else {
+    console.log("No user is currently signed in.");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPopupOpen(false);
 
-    const reminder = { title, description, date };
+    const userId = currentUser.uid; // Get the user ID
+
+    const reminder = { title, description, date, userId }; // Include userId in the reminder data
     console.log("Form Data:", reminder);
 
     try {
@@ -28,19 +39,17 @@ export default function AddReminder({ onFormSubmit }) {
           },
         }
       );
-      const json = await response.data;
 
-      if (!response.ok) {
-        setError(json.error);
-      }
-      if (response.ok) {
-        setError(null);
+      if (response.status === 200) {
         setTitle("");
         setDescription("");
         setDate("");
+        setError(null);
+        onFormSubmit();
+      } else {
+        // Handle error response if needed
+        setError("Failed to add reminder. Please try again later.");
       }
-
-      onFormSubmit();
     } catch (error) {
       setError(error.message);
     }

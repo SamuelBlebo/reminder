@@ -20,9 +20,27 @@ function ReminderList() {
   const [editingReminder, setEditingReminder] = useState(null);
   const { currentUser } = useAuth();
 
+  if (currentUser) {
+    const userId = currentUser.uid;
+    console.log("Current user ID:", userId);
+  } else {
+    console.log("No user is currently signed in.");
+  }
+
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/reminder/");
+      if (!currentUser) {
+        // User not authenticated yet, do something (e.g., redirect to login page)
+        return;
+      }
+
+      setLoading(true);
+      const token = await currentUser.getIdToken();
+      const response = await axios.get("http://localhost:4000/api/reminder/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setData(response.data);
     } catch (error) {
       setError(error);
