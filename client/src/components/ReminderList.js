@@ -22,8 +22,20 @@ function ReminderList() {
 
   const fetchData = async () => {
     try {
+      if (!currentUser) {
+        // Handle case where currentUser is null or undefined
+        console.log("No user is currently signed in.");
+        setLoading(false);
+        return;
+      }
+      const userId = currentUser.uid;
+      console.log("Current user ID:", userId);
+
       const response = await axios.get("http://localhost:4000/api/reminder/");
-      setData(response.data);
+      const userReminders = response.data.filter(
+        (reminder) => reminder.userId === userId
+      );
+      setData(userReminders);
     } catch (error) {
       setError(error);
     } finally {
@@ -33,7 +45,7 @@ function ReminderList() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentUser]);
 
   //Add New Reminder
   const handleFormSubmit = async () => {

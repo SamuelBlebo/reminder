@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+import { useAuth } from "../auth/AuthContext";
+
 import { LuBellPlus } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
 
@@ -10,12 +12,15 @@ export default function AddReminder({ onFormSubmit }) {
   const [date, setDate] = useState("");
   const [error, setError] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const { currentUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPopupOpen(false);
 
-    const reminder = { title, description, date };
+    const userId = currentUser.uid;
+
+    const reminder = { title, description, date, userId };
     console.log("Form Data:", reminder);
 
     try {

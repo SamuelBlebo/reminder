@@ -29,13 +29,14 @@ const getReminder = async (req, res) => {
 
 // create a new Reminder
 const createReminder = async (req, res) => {
-  const { title, description, date } = req.body;
+  const { title, description, date, userId } = req.body;
 
   try {
     const reminder = await Reminder.create({
       title,
       description,
       date,
+      userId,
     });
     res.status(200).json(reminder);
   } catch (error) {

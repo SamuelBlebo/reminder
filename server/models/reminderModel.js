@@ -16,6 +16,10 @@ const reminderSchema = new Schema(
       type: Date,
       required: true,
     },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
