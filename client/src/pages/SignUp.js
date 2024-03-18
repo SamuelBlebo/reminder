@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../auth/firebase";
 import { useNavigate } from "react-router-dom";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
@@ -26,31 +26,40 @@ function SignUp() {
       return;
     }
 
-    await createUserWithEmailAndPassword(auth, username, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        navigate("/signin");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
-        if (errorCode === "auth/email-already-in-use") {
-          setError("Mail already in use.");
-        } else if (errorCode === "auth/weak-password") {
-          setError("Weak password.");
-        } else if (errorCode === "auth/network-request-failed") {
-          setError("Network error");
-        } else {
-          setError(errorMessage);
-        }
-        setTimeout(() => {
-          setError(null);
-        }, 3000);
+      // Update user profile with username
+      await updateProfile(user, { displayName: username });
 
-        console.error(errorCode, errorMessage);
-      });
+      console.log(user);
+      navigate("/");
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+
+      if (errorCode === "auth/email-already-in-use") {
+        setError("Mail already in use.");
+      } else if (errorCode === "auth/weak-password") {
+        setError("Weak password.");
+      } else if (errorCode === "auth/invalid-email") {
+        setError("Invalid Email");
+      } else if (errorCode === "auth/network-request-failed") {
+        setError("Network error");
+      } else {
+        setError(errorMessage);
+      }
+      setTimeout(() => {
+        setError(null);
+      }, 3000);
+
+      console.error(errorCode, errorMessage);
+    }
   };
 
   return (

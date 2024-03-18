@@ -199,7 +199,7 @@ function ReminderList() {
                 Login
               </Link>
               &nbsp;
-              <span> </span> to get started
+              <span> </span> to get continue...
             </h3>
             <div>
               <SignIn />
