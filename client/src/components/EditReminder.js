@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const EditReminder = ({ reminder, onCancel, onSave }) => {
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0];
+  };
+
   const [editedReminder, setEditedReminder] = useState({
     title: reminder.title,
     description: reminder.description,
-    date: new Date(reminder.date).toISOString().split("T")[0],
+    dueDate: formatDate(reminder.dueDate), // Format the dueDate here
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -32,7 +38,7 @@ const EditReminder = ({ reminder, onCancel, onSave }) => {
         }
       );
       onSave();
-      //   closing the Editing window
+      // Closing the Editing window
       setTimeout(() => {
         onCancel();
       }, 500);
@@ -82,16 +88,16 @@ const EditReminder = ({ reminder, onCancel, onSave }) => {
           </div>
           <div className="mb-4">
             <label
-              htmlFor="date"
+              htmlFor="dueDate"
               className="block text-sm font-medium text-gray-700"
             >
-              Date
+              Due Date
             </label>
             <input
               type="date"
-              id="date"
-              name="date"
-              value={editedReminder.date}
+              id="dueDate"
+              name="dueDate"
+              value={editedReminder.dueDate}
               onChange={handleInputChange}
               className="mt-1 p-2 border rounded-md w-full"
             />

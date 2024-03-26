@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import emailjs from "@emailjs/browser";
+
 import AddReminder from "../components/AddReminder";
 import EditReminder from "../components/EditReminder";
 import { useAuth } from "../auth/AuthContext";
@@ -43,63 +43,6 @@ function ReminderList() {
     }
   };
 
-  const isToday = (someDate) => {
-    const today = new Date();
-    const dateToCheck = new Date(someDate); // Convert someDate to a Date object if it's not already
-
-    return (
-      dateToCheck.getDate() === today.getDate() &&
-      dateToCheck.getMonth() === today.getMonth() &&
-      dateToCheck.getFullYear() === today.getFullYear()
-    );
-  };
-
-  const sendReminderEmail = async (
-    recipientEmail,
-    reciepientName,
-    reminderTitle,
-    reminderDescription
-  ) => {
-    try {
-      const message = `
-        Title: ${reminderTitle}
-        Description: ${reminderDescription}
-      `;
-
-      const templateParams = {
-        to_email: recipientEmail,
-        to_name: reciepientName,
-        message: message,
-      };
-      await emailjs.send(
-        "service_53ua6r7", // Replace with your EmailJS service ID
-        "template_7vvnq0k", // Replace with your EmailJS template ID
-        templateParams,
-        "WQgtobaZXpe3LsN2O" // Replace with your EmailJS user ID
-      );
-      console.log("Reminder notification email sent successfully.");
-      console.log(isToday);
-    } catch (error) {
-      console.error("Error sending reminder notification email:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-    if (currentUser) {
-      data.forEach((reminder) => {
-        if (isToday(new Date(reminder.date))) {
-          sendReminderEmail(
-            currentUser.email,
-            currentUser.name,
-            reminder.title,
-            reminder.description
-          );
-        }
-      });
-    }
-  }, [currentUser]);
-
   //Add New Reminder
   const handleFormSubmit = async () => {
     setLoading(true);
@@ -117,6 +60,7 @@ function ReminderList() {
       setSuccessMessage(null);
     }, 3000);
   };
+
   useEffect(() => {
     fetchData();
   }, [currentUser]);
@@ -219,7 +163,9 @@ function ReminderList() {
                       </div>
                       <div className="mt-auto flex justify-between">
                         <p className="text-[12px] font-bold text-[#4C4C4C]">
-                          {new Date(reminder.date).toLocaleDateString("en-GB")}
+                          {new Date(reminder.dueDate).toLocaleDateString(
+                            "en-GB"
+                          )}
                         </p>
 
                         <MdMoreHoriz

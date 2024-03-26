@@ -9,7 +9,7 @@ import { MdClose } from "react-icons/md";
 export default function AddReminder({ onFormSubmit }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const { currentUser } = useAuth();
@@ -19,8 +19,17 @@ export default function AddReminder({ onFormSubmit }) {
     setPopupOpen(false);
 
     const userId = currentUser.uid;
+    const userEmail = currentUser.email;
+    const userName = currentUser.displayName;
 
-    const reminder = { title, description, date, userId };
+    const reminder = {
+      title,
+      description,
+      dueDate,
+      userId,
+      userEmail,
+      userName,
+    };
     console.log("Form Data:", reminder);
 
     try {
@@ -42,7 +51,7 @@ export default function AddReminder({ onFormSubmit }) {
         setError(null);
         setTitle("");
         setDescription("");
-        setDate("");
+        setDueDate("");
       }
 
       onFormSubmit();
@@ -108,8 +117,8 @@ export default function AddReminder({ onFormSubmit }) {
                   className="mt-1 p-2 border rounded-md w-full mb-4"
                   type="date"
                   placeholder="Date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
                   required
                 />
 

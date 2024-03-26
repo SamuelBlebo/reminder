@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const reminderRoutes = require("./routes/reminderRoutes");
 const cors = require("cors");
 
+require("./reminderTask");
+
 const app = express();
 
 //middleware

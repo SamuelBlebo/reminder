@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 //get all Reminders
 
 const getReminders = async (req, res) => {
-  const reminders = await Reminder.find({}).sort({ date: -1 });
+  const reminders = await Reminder.find({}).sort({ dueDate: -1 });
 
   res.status(200).json(reminders);
 };
@@ -29,14 +29,16 @@ const getReminder = async (req, res) => {
 
 // create a new Reminder
 const createReminder = async (req, res) => {
-  const { title, description, date, userId } = req.body;
+  const { title, description, dueDate, userId, userEmail, userName } = req.body;
 
   try {
     const reminder = await Reminder.create({
       title,
       description,
-      date,
+      dueDate,
       userId,
+      userEmail,
+      userName,
     });
     res.status(200).json(reminder);
   } catch (error) {

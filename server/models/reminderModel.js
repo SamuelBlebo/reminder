@@ -12,11 +12,19 @@ const reminderSchema = new Schema(
       type: String,
       required: true,
     },
-    date: {
+    dueDate: {
       type: Date,
       required: true,
     },
     userId: {
+      type: String,
+      required: true,
+    },
+    userEmail: {
+      type: String,
+      required: true,
+    },
+    userName: {
       type: String,
       required: true,
     },
