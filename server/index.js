@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const reminderRoutes = require("./routes/reminderRoutes");
 const cors = require("cors");
 
-require("./reminderTask");
+require("./remindertask");
 
 const app = express();
 
@@ -18,9 +18,9 @@ app.use((req, res, next) => {
 });
 
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: ["http://localhost:3000", "https://reminder-client.vercel.app"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true, //
+  credentials: true,
 };
 
 app.use(cors(corsOptions));

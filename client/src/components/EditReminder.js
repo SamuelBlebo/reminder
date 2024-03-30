@@ -29,7 +29,7 @@ const EditReminder = ({ reminder, onCancel, onSave }) => {
 
     try {
       await axios.patch(
-        `http://localhost:4000/api/reminder/${reminder._id}`,
+        `https://reminder-server-chi.vercel.app/api/reminder/${reminder._id}`,
         editedReminder,
         {
           headers: {

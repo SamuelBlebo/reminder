@@ -31,7 +31,9 @@ function ReminderList() {
       const userId = currentUser.uid;
       console.log("Current user ID:", userId);
 
-      const response = await axios.get("http://localhost:4000/api/reminder/");
+      const response = await axios.get(
+        "https://reminder-server-chi.vercel.app/api/reminder/"
+      );
       const userReminders = response.data.filter(
         (reminder) => reminder.userId === userId
       );
@@ -110,7 +112,7 @@ function ReminderList() {
   };
 
   const sortedData = [...data].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
+    (a, b) => new Date(b.date) - new Date(a.date)
   );
 
   const getColorClass = (index) => {
